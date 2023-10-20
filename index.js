@@ -31,6 +31,7 @@ async function run() {
     const carsCollection = database.collection("cars");
     
     const usersCollection=client.db('AllUserDB').collection("user")
+    const myCartCollection=client.db('CartDB').collection("myCart")
     app.get('/allcars', async (req, res) => {
         const cursor = carsCollection.find();
         const result = await cursor.toArray();
@@ -58,6 +59,30 @@ async function run() {
     app.get('/allusers', async (req, res) => {
         const cursor = usersCollection.find();
         const result = await cursor.toArray();
+        res.send(result);
+    })
+    app.post('/addCart',async(req,res)=>{
+        const myCart=req.body
+        console.log(myCart)
+        const result=await myCartCollection.insertOne(myCart)
+        res.send(result)
+    })
+    app.get('/addCart', async (req, res) => {
+        const cursor = myCartCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+    app.delete('/addCart/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await myCartCollection.deleteOne(query);
+        console.log(result)
+        res.send(result);
+    })
+    app.get('/addCart/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await myCartCollection.findOne(query);
         res.send(result);
     })
 
